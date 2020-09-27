@@ -1,0 +1,19 @@
+name: Swift
+
+on:
+  push:
+    branches: [ swift-5.3-branch ]
+  pull_request:
+    branches: [ swift-5.3-branch ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
