@@ -21,7 +21,7 @@ jobs:
       run: tar -czvf swift-format.tar.gz -C .build/release swift-format
     - name: Create Release
       id: create_release
-      uses: actions/create_release@v1
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
