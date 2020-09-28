@@ -17,11 +17,25 @@ jobs:
       run: swift build -c release -v
     - name: Run tests
       run: swift test -v
-    - name: Pack assets files
-      run: |
-        tar -czvf swift-format.tar.gz -C .build/release swift-format
-    - name: Upload Release Asset
-      uses: actions/upload-artifact@v2
+    - name: Package build
+      run: tar -czvf swift-format.tar.gz -C .build/release swift-format
+    - name: Create Release
+      id: create_release
+      uses: actions/create_release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: Release
-        path: swift-format.tar.gz
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./swift-format.tar.gz
+        asset_name: swift-format.tar.gz
+        asset_content_type: application/gzip
