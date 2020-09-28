@@ -17,16 +17,19 @@ jobs:
       run: swift build -c release -v
     - name: Run tests
       run: swift test -v
+    - name: Get package version
+      run: echo '::set-env name=SWIFT_FORMAT_VER::$(.build/release/swift-format --version)'
     - name: Package build
-      run: tar -czvf swift-format.tar.gz -C .build/release swift-format
+      run: |
+        tar -czvf swift-format_${{ SWIFT_FORMAT_VER }}_linux_x86-64.tar.gz -C .build/release swift-format
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ SWIFT_FORMAT_VER }}
+        release_name: Release ${{ SWIFT_FORMAT_VER }}
         draft: false
         prerelease: false
     - name: Upload Release Asset
@@ -36,6 +39,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./swift-format.tar.gz
-        asset_name: swift-format.tar.gz
+        asset_path: ./swift-format_${{ SWIFT_FORMAT_VER }}_linux_x86-64.tar.gz
+        asset_name: swift-format_${{ SWIFT_FORMAT_VER }}_linux_x86-64.tar.gz
         asset_content_type: application/gzip
