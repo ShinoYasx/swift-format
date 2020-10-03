@@ -16,7 +16,7 @@ jobs:
       id: test
       run: echo '::set-output name=test::$(echo hello)'
     - name: getting some outpus
-      run: echo ${{ setps.test.outputs.test }}
+      run: echo ${{ steps.test.outputs.test }}
     - uses: actions/checkout@v2
     - name: Build
       run: swift build -c release -v
