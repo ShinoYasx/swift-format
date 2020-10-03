@@ -14,37 +14,37 @@ jobs:
     steps:
     - name: setting some outputs
       id: test
-      run: echo '::set-output name=test::$(echo hello)'
-    - name: getting some outpus
+      run: echo "::set-output name=test::$(echo hello)"
+    - name: getting some outputs
       run: echo ${{ steps.test.outputs.test }}
-    - uses: actions/checkout@v2
-    - name: Build
-      run: swift build -c release -v
-    - name: Run tests
-      run: swift test -v
-    - name: Get package version
-      id: version
-      run: echo '::set-output name=version::$(.build/release/swift-format --version)'
-    - name: Package build
-      run: |
-        tar -czvf swift-format_${{ steps.version.outputs.version }}_linux_x86-64.tar.gz -C .build/release swift-format
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.version.outputs.version }}
-        release_name: Release ${{ steps.version.outputs.version }}
-        draft: false
-        prerelease: false
-    - name: Upload Release Asset
-      id: upload-release-assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./swift-format_${{ steps.version.outputs.version }}_linux_x86-64.tar.gz
-        asset_name: swift-format_${{ steps.version.outputs.version }}_linux_x86-64.tar.gz
-        asset_content_type: application/gzip
+    # - uses: actions/checkout@v2
+    # - name: Build
+    #   run: swift build -c release -v
+    # - name: Run tests
+    #   run: swift test -v
+    # - name: Get package version
+    #   id: version
+    #   run: echo '::set-output name=version::$(.build/release/swift-format --version)'
+    # - name: Package build
+    #   run: |
+    #     tar -czvf swift-format_${{ steps.version.outputs.version }}_linux_x86-64.tar.gz -C .build/release swift-format
+    # - name: Create Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: ${{ steps.version.outputs.version }}
+    #     release_name: Release ${{ steps.version.outputs.version }}
+    #     draft: false
+    #     prerelease: false
+    # - name: Upload Release Asset
+    #   id: upload-release-assets
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./swift-format_${{ steps.version.outputs.version }}_linux_x86-64.tar.gz
+    #     asset_name: swift-format_${{ steps.version.outputs.version }}_linux_x86-64.tar.gz
+    #     asset_content_type: application/gzip
