@@ -11,10 +11,12 @@ jobs:
 
     runs-on: ubuntu-20.04
 
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-
     steps:
+    - name: setting some outputs
+      id: test
+      run: echo '::set-output name=test::$(echo hello)'
+    - name: getting some outpus
+      run: echo ${{ setps.test.outputs.test }}
     - uses: actions/checkout@v2
     - name: Build
       run: swift build -c release -v
@@ -23,8 +25,6 @@ jobs:
     - name: Get package version
       id: version
       run: echo '::set-output name=version::$(.build/release/swift-format --version)'
-    - name: test
-      run: echo ${{ steps.version.outputs.version }}
     - name: Package build
       run: |
         tar -czvf swift-format_${{ steps.version.outputs.version }}_linux_x86-64.tar.gz -C .build/release swift-format
